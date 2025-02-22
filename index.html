@@ -1,0 +1,618 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incremental Test</title>
+    <link rel="stylesheet" href="styles.css"></link>
+</head>
+<body>
+    <p>You have <span id="money">10.000</span>$. You are gaining <span id="gain">0.000</span>$/s</p>
+    <p>You have <span id="IP">0</span> IP</p>
+    <p>You have <span id="receptors">0</span> Receptors</p>
+
+    <button id="infinityReset" onclick="infinity.reset()">Reset for <span id="pendingIP">0</span> Infinity Points.</button>
+    <br>
+    <br>
+    <button id="irisReset" onclick="iris.reset()">Reset for <span id="pendingReceptors">0</span> Receptors.</button>
+    <br>
+    <br>
+
+    <button id="mainTabButton" onclick="switchTab('mainTab')">Main</button>
+    <button id="infinityTabButton" onclick="switchTab('infinityTab')">Infinity</button>
+    <button id="breakInfinityTabButton" onclick="switchTab('breakInfinityTab')">Break infinity</button>
+    <button id="infinityGeneratorsTabButton" onclick="switchTab('infinityGeneratorsTab')">Infinity generators</button>
+    <button id="irisTabButton" onclick="switchTab('irisTab')">Iris</button>
+    <button id="irisChallengesTabButton" onclick="switchTab('irisChallengesTab')">Iris challenges</button>
+    <button id="optionsTabButton" onclick="switchTab('optionsTab')">Options</button>
+    <!-- Disabilitare i pulsanti non sbloccati (vedere Spice Idle / Antimatter Dimensions) -->
+
+    <div id="mainTab">
+        <p>Money gain is softcapped ^0.850 past 1e50$/s, ^0.722 past 1e100$/s and ^0.614 past 1e175$/s.</p>
+        <p>(Softcaps are retroactive. Total softcap: ^<span id="softcap">1.000</span>).</p>
+        <p>Base gain and total money are hardcapped at 1e308$(/s).</p>
+        <button onclick="buyMax()">Buy Max</button>
+        <br><br>
+        <table>
+            <tr>
+                <td><button class="upgrade" onclick="upgrades.buy(0)">Increase your base gain by 1$/s<br>Cost: <span id="upgradeCost1">10.000</span>$</button></td>
+                <td><button class="upgrade" onclick="upgrades.buy(1)">Multiply your base gain by <span id="upgradeEffect2">1.150</span><br>Cost: <span id="upgradeCost2">150.000</span>$</button></td>
+                <td><button class="upgrade" onclick="upgrades.buy(2)">Multiply your base gain by <span id="upgradeEffect3">2.000</span><br>Cost: <span id="upgradeCost3">1.000e3</span>$</button></td>
+                <td><button class="upgrade" onclick="upgrades.buy(3)">Increase your gain exponent by 0.05<br>Cost: <span id="upgradeCost4">1.000e6</span>$</button></td>
+            </tr>
+            <tr>
+                <td><button class="upgrade" onclick="upgrades.buy(4)">Give free levels to previous upgrades<br>Cost: <span id="upgradeCost5">1.000e18</span>$</button></td>
+                <td><button class="upgrade" onclick="upgrades.buy(5)">Increase the 1st upgrade exponent by 0.1<br>Cost: <span id="upgradeCost6">1.000e38</span>$</button></td>
+                <td><button class="upgrade" onclick="upgrades.buy(6)">Increase the base of the 2nd upgrade by 0.05<br>Cost: <span id="upgradeCost7">1.000e80</span>$</button></td>
+                <td><button class="upgrade" onclick="upgrades.buy(7)">Weaken the total softcap<br>Cost: <span id="upgradeCost8">1.000e180</span>$</button></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="infinityTab">
+        <p>You have <span id="infinities">0</span> infinities.</p>
+        <p id="auto">You have no autobuyers.</p>
+        <p>Autobuyers unlocks at 2, 4, 6, 8, 10, 13, 16 and 20 infinities.</p>
+        <p>Note: each upgrade and row requires the previous one to be bought.</p>
+        <div>
+            <table>
+                <tr>
+                    <td><button class="upgrade" id="IU0" onclick="infinity.upgrades.buy(0)">Multiply money gain by 4.<br>Cost: 1IP</button></td>
+                    <td><button class="upgrade" id="IU1" onclick="infinity.upgrades.buy(1)">Multiply money gain by 2.<br>Cost: 1IP</button></td>
+                    <td><button class="upgrade" id="IU2" onclick="infinity.upgrades.buy(2)">Multiply money gain after softcap by 1.414.<br>Cost: 1IP</button></td>
+                    <td><button class="upgrade" id="IU3" onclick="infinity.upgrades.buy(3)">Multiply money gain by 1.25.<br>Cost: 1IP</button></td>
+                </tr>
+                <tr>
+                    <td><button class="upgrade" id="IU4" onclick="infinity.upgrades.buy(4)">Increase the base of the 2nd upgrade by 0.001.<br>Cost: 2IP</button></td>
+                    <td><button class="upgrade" id="IU5" onclick="infinity.upgrades.buy(5)">Increase the base of the 2nd upgrade by 0.002.<br>Cost: 2IP</button></td>
+                    <td><button class="upgrade" id="IU6" onclick="infinity.upgrades.buy(6)">Increase the base of the 2nd upgrade by 0.004.<br>Cost: 2IP</button></td>
+                    <td><button class="upgrade" id="IU7" onclick="infinity.upgrades.buy(7)">Increase the base of the 2nd upgrade by 0.008.<br>Cost: 2IP</button></td>
+                </tr>
+                <tr>
+                    <td><button class="upgrade" id="IU8" onclick="infinity.upgrades.buy(8)">The 5th upgrade gives 100% more 1st upgrade levels.<br>Cost: 3IP</button></td>
+                    <td><button class="upgrade" id="IU9" onclick="infinity.upgrades.buy(9)">The 5th upgrade gives 33.3% more 2nd and 3rd upgrade levels.<br>Cost: 3IP</button></td>
+                    <td><button class="upgrade" id="IU10" onclick="infinity.upgrades.buy(10)">The 5th upgrade gives 10% more 4th upgrade levels.<br>Cost: 3IP</button></td>
+                    <td><button class="upgrade" id="IU11" onclick="infinity.upgrades.buy(11)">The 5th upgrade gives 5% more upgrade levels.<br>Cost: 3IP</button></td>
+                </tr>
+                <tr>
+                    <td><button class="upgrade" id="IU12" onclick="infinity.upgrades.buy(12)">Divide the 8th upgrade cost by 100.<br>Cost: 5IP</button></td>
+                    <td><button class="upgrade" id="IU13" onclick="infinity.upgrades.buy(13)">The 1st upgrade is 5x stronger.<br>Cost: 5IP</button></td>
+                    <td><button class="upgrade" id="IU14" onclick="infinity.upgrades.buy(14)">Multiply money gain by 100 * (IP + 1).<br>Cost: 5IP</button></td>
+                    <td><button class="upgrade" id="IU15" onclick="infinity.upgrades.buy(15)">Remove all softcaps.<br>Cost: 10IP</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="breakInfinityTab">
+        <br>
+        <button class="upgrade" id="breakButton" onclick="infinity.break()">Break infinity and start each reset at e308$.<br>Requires 100 infinities.</button>
+        <br>
+        <table>
+            <br>
+            <tr>
+                <td><button class="upgrade" id="BU0" onclick="infinity.breakBuy(0)">The 1st row of infinity upgrades is stronger.<br>Cost: 1e3IP</button></td>
+                <td><button class="upgrade" id="BU1" onclick="infinity.breakBuy(1)">The 2nd row of infinity upgrades is stronger.<br>Cost: 5e4IP</button></td>
+                <td><button class="upgrade" id="BU2" onclick="infinity.breakBuy(2)">The 3rd row of infinity upgrades is stronger.<br>Cost: 5e7IP</button></td>
+                <td><button class="upgrade" id="BU3" onclick="infinity.breakBuy(3)">The 4th row of infinity upgrades is stronger.<br>Cost: 2e9IP</button></td>
+            </tr>
+            <tr>
+                <td><button class="upgrade" id="BU4" onclick="infinity.breakBuy(4)">The post-infinity cost scaling is weaker.<br>Cost: 5e20IP</button></td>
+                <td><button class="upgrade" id="BU5" onclick="infinity.breakBuy(5)">4th upgrade is stronger.<br>Cost: 5e24IP</button></td>
+                <td><button class="upgrade" id="BU6" onclick="infinity.breakBuy(6)">The post-infinity cost scaling is weaker.<br>Cost: 1e31IP</button></td>
+                <td><button class="upgrade" id="BU7" onclick="infinity.breakBuy(7)">6th upgrade is stronger.<br>Cost: 1e43IP</button></td>
+            </tr>
+            <tr>
+                <td><button class="upgrade" id="BU8" onclick="infinity.breakBuy(8)">The post-infinity cost scaling is weaker.<br>Cost: 1e55IP</button></td>
+                <td><button class="upgrade" id="BU9" onclick="infinity.breakBuy(9)">7th upgrade is stronger.<br>Cost: 5e63IP</button></td>
+                <td><button class="upgrade" id="BU10" onclick="infinity.breakBuy(10)">The post-infinity cost scaling is weaker.<br>Cost: 1e77IP</button></td>
+                <td><button class="upgrade" id="BU11" onclick="infinity.breakBuy(11)">8th upgrade is stronger and scales less.<br>Cost: 3e91IP</button></td>
+            </tr>
+            <tr>
+                <td><button class="upgrade" id="BU12" onclick="infinity.breakBuy(12)">Infinity generators are boosted by money.<br>Cost: 1e290IP</button></td>
+                <td><button class="upgrade" id="BU13" onclick="infinity.breakBuy(13)">Infinity generators are boosted by IP.<br>Cost: 1e570IP</button></td>
+                <td><button class="upgrade" id="BU14" onclick="infinity.breakBuy(14)">Infinity generators are boosted by IPow.<br>Cost: 1e745IP</button></td>
+                <td><button class="upgrade" id="BU15" onclick="infinity.breakBuy(15)">Infinity generators are boosted by their amount.<br>Cost: 1e810IP</button></td>
+            </tr>
+        </table>
+        <br>
+        <button class="upgrade" onclick="infinity.breakBuy(16)">Multiply IP gain by 4.<br>Cost: <span id="IPmultiCost">100</span>IP</button>
+    </div>
+
+    <div id="infinityGeneratorsTab">
+        <p>You have <span id="infinityPower">0</span> infinity Power (+<span id="infPowGain">0</span>/s).<br>Multiplying money gain by <span id="infinityPowerBoost">1.000</span>.</p>
+        <span>Each purchase increases that generator multiplier by 2x</span>
+        <span class="tooltip">(?)
+            <span class="tooltiptext">
+            The 1st generator produces infinity power,
+            each subsequential generator produces the previous one.
+            <br>
+            The number in the center is the generator amount and gain,
+            the one on the bottom left is its multiplier.
+            <br>
+            When buying a generator its multiplier is multiplied by 2.
+            <br>
+            The cost exponent of generators initially increases linearly,
+            but it will eventually increase quadratically.
+            <br>
+            The cost exponent of upgrades initially increases quadratically,
+            but it will eventually increase cubically.
+            <br>
+            Infinity power boosts money gain by IPow ^ 1000,
+            but money gain will be softcapped various times.
+                <span class="tooltip2">(?)
+                    <span class="tooltiptext2">
+                        ^0.6 at ee5$
+                        <br>
+                        ^0.528 at e2e5$
+                        <br>
+                        ^0.6 at e4e5$
+                        <br>
+                        ^0.6 at e5e5$
+                        <br>
+                        ^0.1 at e7e5$
+                        <br>
+                        <br>
+                        exp^0.5 at e7.2e5$
+                        <br>
+                        exp^0.5 at e7.4e5$
+                        <br>
+                        exp^0.5 at e7.6e5$
+                        <br>
+                        exp^0.5 at e7.8e5$
+                    </span>
+                </span>
+            </span>
+        </span>
+        <br><br>
+        <button onclick="infinityGenerators.buyMax()">Buy max</button>
+        <br>
+        <table>
+            <tr>
+                <td class="infinityGeneratorColumn">1st generator<br><span id="infGen1Multi">1</span>x</td>
+                <td class="infinityGeneratorColumn"><span id="infGen1Amount">0</span><br>+<span id="infGen1Gain">0</span>/s (+<span id="infGen1GainRel">0</span>%)</td>
+                <td class="infinityGeneratorColumn"><button onclick="infinityGenerators.buyGen(0)">Purchase 1.<br>Cost: <span id="infGen1Cost">3.000e137</span>IP</button></td>
+            </tr>
+            <tr>
+                <td class="infinityGeneratorColumn">2nd generator<br><span id="infGen2Multi">1</span>x</td>
+                <td class="infinityGeneratorColumn"><span id="infGen2Amount">0</span><br>+<span id="infGen2Gain">0</span>/s (+<span id="infGen2GainRel">0</span>%)</td>
+                <td class="infinityGeneratorColumn"><button onclick="infinityGenerators.buyGen(1)">Purchase 1.<br>Cost: <span id="infGen2Cost">???</span>IP</button></td>
+            </tr>
+            <tr>
+                <td class="infinityGeneratorColumn">3rd generator<br><span id="infGen3Multi">1</span>x</td>
+                <td class="infinityGeneratorColumn"><span id="infGen3Amount">0</span><br>+<span id="infGen3Gain">0</span>/s (+<span id="infGen3GainRel">0</span>%)</td>
+                <td class="infinityGeneratorColumn"><button onclick="infinityGenerators.buyGen(2)">Purchase 1.<br>Cost: <span id="infGen3Cost">???</span>IP</button></td>
+            </tr>
+            <tr>
+                <td class="infinityGeneratorColumn">4th generator<br><span id="infGen4Multi">1</span>x</td>
+                <td class="infinityGeneratorColumn"><span id="infGen4Amount">0</span><br>+<span id="infGen4Gain">0</span>/s (+<span id="infGen4GainRel">0</span>%)</td>
+                <td class="infinityGeneratorColumn"><button onclick="infinityGenerators.buyGen(3)">Purchase 1.<br>Cost: <span id="infGen4Cost">???</span>IP</button></td>
+            </tr>
+            <tr>
+                <td class="infinityGeneratorColumn">5th generator<br><span id="infGen5Multi">1</span>x</td>
+                <td class="infinityGeneratorColumn"><span id="infGen5Amount">0</span><br>+<span id="infGen5Gain">0</span>/s (+<span id="infGen5GainRel">0</span>%)</td>
+                <td class="infinityGeneratorColumn"><button onclick="infinityGenerators.buyGen(4)">Purchase 1.<br>Cost: <span id="infGen5Cost">???</span>IP</button></td>
+            </tr>
+            <tr>
+                <td class="infinityGeneratorColumn">6th generator<br><span id="infGen6Multi">1</span>x</td>
+                <td class="infinityGeneratorColumn"><span id="infGen6Amount">0</span><br>+<span id="infGen6Gain">0</span>/s (+<span id="infGen6GainRel">0</span>%)</td>
+                <td class="infinityGeneratorColumn"><button onclick="infinityGenerators.buyGen(5)">Purchase 1.<br>Cost: <span id="infGen6Cost">???</span>IP</button></td>
+            </tr>
+            <tr>
+                <td class="infinityGeneratorColumn">7th generator<br><span id="infGen7Multi">1</span>x</td>
+                <td class="infinityGeneratorColumn"><span id="infGen7Amount">0</span><br>+<span id="infGen7Gain">0</span>/s (+<span id="infGen7GainRel">0</span>%)</td>
+                <td class="infinityGeneratorColumn"><button onclick="infinityGenerators.buyGen(6)">Purchase 1.<br>Cost: <span id="infGen7Cost">???</span>IP</button></td>
+            </tr>
+            <tr>
+                <td class="infinityGeneratorColumn">8th generator<br><span id="infGen8Multi">1</span>x</td>
+                <td class="infinityGeneratorColumn"><span id="infGen8Amount">0</span></td>
+                <td class="infinityGeneratorColumn"><button onclick="infinityGenerators.buyGen(7)">Purchase 1.<br>Cost: <span id="infGen8Cost">???</span>IP</button></td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td><button class="upgrade" onclick="infinityGenerators.buyUpg(0)">Increase the boost from infinity power.<br>Cost: <span id="infGenUpgCost1">1.000e10</span>IPow</button></td>
+                <td><button class="upgrade" onclick="infinityGenerators.buyUpg(1)">Increase the multiplier per purchase of infinity generators.<br>Cost: <span id="infGenUpgCost2">1e60</span>IPow</button></td>
+                <td><button class="upgrade" onclick="infinityGenerators.buyUpg(2)">Multiply infinity generators multipliers by infinities.<br>Cost: <span id="infGenUpgCost3">1e280</span>IPow</button></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="irisTab">
+        <br>
+        <button onclick="iris.respec()">Respec</button>
+        <p>Note: each upgrade purchased also reduces the e7.2e5$-e7.8e5$ softcaps.</p>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade11" onclick="iris.buy(11)" style="background-color: #aa2b2b;" onmouseover="document.getElementById('irisUpgradeTooltip11').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip11').style.display = 'none'">
+                            4 (11)
+                        </button>
+                    </td> <!-- dull red (4r + g + b) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade12" onclick="iris.buy(12)" style="background-color: #aa5500;" onmouseover="document.getElementById('irisUpgradeTooltip12').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip12').style.display = 'none'">
+                            3 (12)
+                        </button>
+                    </td> <!-- orange (2r + g) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade13" onclick="iris.buy(13)" style="background-color: #808000;" onmouseover="document.getElementById('irisUpgradeTooltip13').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip13').style.display = 'none'">
+                            2 (13)
+                        </button>
+                    </td> <!-- yellow (r + g) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade14" onclick="iris.buy(14)" style="background-color: #55aa00;" onmouseover="document.getElementById('irisUpgradeTooltip14').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip14').style.display = 'none'">
+                            3 (14)
+                        </button>
+                    </td> <!-- smth g-ish (r + 2g) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade15" onclick="iris.buy(15)" style="background-color: #2baa2b;" onmouseover="document.getElementById('irisUpgradeTooltip15').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip15').style.display = 'none'">
+                        4 (15)
+                        </button>
+                    </td> <!-- dull g (r + 4g + b) -->
+                </tr>
+                <tr>
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade21" onclick="iris.buy(21)" style="background-color: #00ffff;" onmouseover="document.getElementById('irisUpgradeTooltip21').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip21').style.display = 'none'">
+                            IrC1 (21)
+                        </button>
+                    </td> <!-- N/A -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade22" onclick="iris.buy(22)" style="background-color: #ff0000;" onmouseover="document.getElementById('irisUpgradeTooltip22').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip22').style.display = 'none'">
+                            1 (22)
+                        </button>
+                    </td> <!-- red -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade23" onclick="iris.buy(23)" style="background-color: #ffff00;"onmouseover="document.getElementById('irisUpgradeTooltip23').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip23').style.display = 'none'">
+                            0 (23)
+                        </button>
+                    </td> <!-- yellow (-b) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade24" onclick="iris.buy(24)" style="background-color: #00ff00;" onmouseover="document.getElementById('irisUpgradeTooltip24').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip24').style.display = 'none'">
+                            1 (24)
+                        </button>
+                    </td> <!-- green -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade25" onclick="iris.buy(25)" style="background-color: #ff00ff;" onmouseover="document.getElementById('irisUpgradeTooltip25').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip25').style.display = 'none'">
+                            IrC2 (25)
+                        </button>
+                    </td> <!-- N/A -->
+                </tr>
+                <tr>
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade31" onclick="iris.buy(31)" style="background-color: #aa0055;" onmouseover="document.getElementById('irisUpgradeTooltip31').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip31').style.display = 'none'">
+                            3 (31)
+                        </button>
+                    </td> <!-- pink-ish magenta (2r + b) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade32" onclick="iris.buy(32)" style="background-image: conic-gradient(#00ffff, #ffff00, #00ffff);" onmouseover="document.getElementById('irisUpgradeTooltip32').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip32').style.display = 'none'">
+                            IrC5 (32)
+                        </button>
+                    </td> <!-- N/A -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade33" onclick="iris.buy(33)" style="background-color: #555555;" onmouseover="document.getElementById('irisUpgradeTooltip33').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip33').style.display = 'none'">
+                            I (33)
+                        </button>
+                    </td> <!-- white (r + g + b) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade34" onclick="iris.buy(34)" style="background-image: conic-gradient(#ff00ff, #ffff00, #ff00ff);" onmouseover="document.getElementById('irisUpgradeTooltip34').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip34').style.display = 'none'">
+                            IrC6 (34)
+                        </button>
+                    </td> <!-- N/A -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade35" onclick="iris.buy(35)" style="background-color: #00aa55;" onmouseover="document.getElementById('irisUpgradeTooltip35').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip35').style.display = 'none'">
+                            3 (35)
+                        </button>
+                    </td> <!-- b-ish green (2g + b) -->
+                </tr>
+                <tr>
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade41" onclick="iris.buy(41)" style="background-image: conic-gradient(#00ffff, #ff00ff, #00ffff);" onmouseover="document.getElementById('irisUpgradeTooltip41').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip41').style.display = 'none'">
+                            IrC4 (41)
+                        </button>
+                    </td> <!-- N/A -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade42" onclick="iris.buy(42)" style="background-color: #ff00ff;" onmouseover="document.getElementById('irisUpgradeTooltip42').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip42').style.display = 'none'">
+                            0 (42)
+                        </button>
+                    </td> <!-- magenta (-g) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade43" onclick="iris.buy(43)" style="background-color: #0000ff;" onmouseover="document.getElementById('irisUpgradeTooltip43').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip43').style.display = 'none'">
+                            1 (43)
+                        </button>
+                    </td> <!-- blue -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade44" onclick="iris.buy(44)" style="background-color: #00ffff;" onmouseover="document.getElementById('irisUpgradeTooltip44').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip44').style.display = 'none'">
+                            0 (44)
+                        </button>
+                    </td> <!-- light blue (-r) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade45" onclick="iris.buy(45)" style="background-color: #ffff00;" onmouseover="document.getElementById('irisUpgradeTooltip45').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip45').style.display = 'none'">
+                            IrC3 (45)
+                        </button>
+                    </td> <!-- N/A -->
+                </tr>
+                <tr>
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade51" onclick="iris.buy(51)" style="background-color: #800080;" onmouseover="document.getElementById('irisUpgradeTooltip51').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip51').style.display = 'none'">
+                            2 (51)
+                        </button>
+                    </td> <!-- magenta (r + b) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade52" onclick="iris.buy(52)" style="background-color: #5500aa;"onmouseover="document.getElementById('irisUpgradeTooltip52').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip52').style.display = 'none'">
+                            3 (52)
+                        </button>
+                    </td> <!-- purple (r + 2b) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade53" onclick="iris.buy(53)" style="background-color: #2b2baa;" onmouseover="document.getElementById('irisUpgradeTooltip53').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip53').style.display = 'none'">
+                            4 (53)
+                        </button>
+                    </td> <!-- dull blue (r + g + 4b) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade54" onclick="iris.buy(54)" style="background-color: #0055aa;" onmouseover="document.getElementById('irisUpgradeTooltip54').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip54').style.display = 'none'">
+                            3 (54)
+                        </button>
+                    </td> <!-- cyan (g + 2b) -->
+                    <td>
+                        <button class="irisUpgrade" id="irisUpgrade55" onclick="iris.buy(55)" style="background-color: #008080;" onmouseover="document.getElementById('irisUpgradeTooltip55').style.display = 'block'" onmouseout="document.getElementById('irisUpgradeTooltip55').style.display = 'none'">
+                            2 (55)
+                        </button>
+                    </td> <!-- light blue (g + b) -->
+                </tr>
+            </table>
+        </div>
+        <br>
+        <div>
+            <span id="irisUpgradeTooltip11" style="display: none;">req 12, 31 & ??? Receptors.<br>???<br>???<br>???<br>???<br>???<br>???</span> <!-- X -->
+            <span id="irisUpgradeTooltip12" style="display: none;">req 13 & 50 Receptors.<br>Raise money gain ^1.05;<br>Multiply money gain by 1e1000 ^ IrUs;<br>Multiply IP gain by (Receptors * IrUs) ^ 2.</span>
+            <span id="irisUpgradeTooltip13" style="display: none;">req 22, 24 & 3 Receptors.<br>Multiply money gain by 100 ^ Receptors;<br>Multiply IP gain by (Receptors + 1) ^ 3.</span>
+            <span id="irisUpgradeTooltip14" style="display: none;">req 13 & 50<br>Raise IP gain ^ 1.05;<br>Increase BU17 base by 1;<br>Multiply money gain by log10(money) ^ 1000.</span>
+            <span id="irisUpgradeTooltip15" style="display: none;">req 14, 35 & ??? Receptors.<br>???<br>???<br>???<br>???<br>???<br>???</span> <!-- X -->
+
+            <span id="irisUpgradeTooltip21" style="display: none;">req N/A & 300 Receptors.<br>Unlock IrC1 (red).</span> <!-- X -->
+            <span id="irisUpgradeTooltip22" style="display: none;">req N/A & 1 Receptor.<br>Multiply money gain by 1.000e3.</span>
+            <span id="irisUpgradeTooltip23" style="display: none;">req N/A & ??? Receptors<br>???</span>
+            <span id="irisUpgradeTooltip24" style="display: none;">req N/A & 1 Receptor.<br>Multiply IP gain by 256.</span>
+            <span id="irisUpgradeTooltip25" style="display: none;">req N/A & ??? Receptors.<br>Unlock IrC2 (green).</span> <!-- X -->
+
+            <span id="irisUpgradeTooltip31" style="display: none;">req 51 & 50 Receptors.<br>Raise money gain ^1.05;<br>Multiply money gain by 1e25000;<br>The e7e5$ softcap is weaker.</span>
+            <span id="irisUpgradeTooltip32" style="display: none;">req N/A & ??? Receptors.<br>Unlock IrC5 (red-blue).</span> <!-- X -->
+            <span id="irisUpgradeTooltip33" style="display: none;">req ??? & ??? Receptors.</span> <!-- X -->
+            <span id="irisUpgradeTooltip34" style="display: none;">req N/A & ??? Receptors.<br>Unlock IrC6 (green-blue).</span> <!-- X -->
+            <span id="irisUpgradeTooltip35" style="display: none;">req 55 & 50 Receptors.<br>Raise IP gain ^1.05;<br>Multiply IP gain by 1e50;<br>The e7e5$ softcap is weaker.</span>
+
+            <span id="irisUpgradeTooltip41" style="display: none;">req N/A & ??? Receptors.<br>Unlock IrC4 (red-green).</span> <!-- X -->
+            <span id="irisUpgradeTooltip42" style="display: none;">req N/A & ??? Receptors<br>???</span>
+            <span id="irisUpgradeTooltip43" style="display: none;">req N/A & 1 Receptor.<br>The e7e5$ softcap is weaker.</span>
+            <span id="irisUpgradeTooltip44" style="display: none;">req N/A & ??? Receptors<br>???</span>
+            <span id="irisUpgradeTooltip45" style="display: none;">req N/A & ??? Receptors.<br>Unlock IrC3 (blue).</span> <!-- X -->
+
+            <span id="irisUpgradeTooltip51" style="display: none;">req 22, 43 & 3 Receptors.<br>Multiply money gain by (Receptors + 1) ^ 250;<br>The e7e5$ softcap is weaker.</span>
+            <span id="irisUpgradeTooltip52" style="display: none;">req 51 & 50 Receptors.<br>Remove the ee5$ and e4e5$ softcaps.<br>The e7e5$ softcap is weaker;<br>Multiply money gain by 1e50000.</span>
+            <span id="irisUpgradeTooltip53" style="display: none;">req 52, 54 & ??? Receptors.<br>???<br>???<br>???<br>???<br>???<br>???</span> <!-- X -->
+            <span id="irisUpgradeTooltip54" style="display: none;">req 55 & 50 Receptors.<br>Remove the e2e5$ and e5e5$ softcaps;<br>The e7e5$ softcap is weaker;<br>Multiply IP gain by 1e100.</span>
+            <span id="irisUpgradeTooltip55" style="display: none;">req 24, 43 & 3 Receptors.<br>Multiply infinities gain by round(Receptors ^ 0.5);<br>The e7e5$ softcap is weaker.</span>
+        </div>
+    </div>
+
+    <div id="irisChallengesTab">
+        <br>
+        <span id="currentChallenge">You are currently not in any challenge</span>
+        <button onclick="iris.challenges.exit()">Exit</button>
+        <span class="tooltip">(?)
+            <span class="tooltipText">
+                Entering an Iris Challenge will put you in a more difficult Iris reset,
+                If you can reach the goal you'll be able to complete the challenge.
+                <br>
+                In order to enter a challenge you need to by its relative IrUs.
+                <br>
+                Each challenge has a primary reward which scales based on its completitions and a
+                secondary reward which is unlocked by the first completitions.
+                <br>
+                After some amounts of total completitions you will unlock some QOL milestone,
+                mostly keeping things on Iris reset or unlocking an autobuyer.
+            </span>
+        </span>
+        <p>Note: each challenge completition also reduces the e8e5$ softcap.</p>
+        <button id="toggleChallengesMilestonesButton" onclick="toggleChallengesMilestones()">Hide challenges milestones</button>
+        <p id="challengesMilestones">
+            At 3 total iris challenges completitions:
+            <br>
+            You keep infinity upgrades on iris reset.
+            <br>
+            <br>
+            At 6 total iris challenges completitions:
+            <br>
+            You keep infinity broken and 1e4 infinities on iris reset.
+            <br>
+            <br>
+            At 9 total iris challenges completitions:
+            <br>
+            You keep the first 12 break infinity upgrades on iris reset.
+            <br>
+            <br>
+            At 12 total iris challenges completitions:
+            <br>
+            You keep the last 4 break infinity upgrades on iris reset and unlock the autobuyer for IP multiplier.
+            <br>
+            <br>
+            At 15 total iris challenged completitions:
+            <br>
+            You unlock the autobuyers for infinity generators.
+            <br>
+            <br>
+            At 18 total iris challenges completitions:
+            <br>
+            Unlock the autobuyers for the infinity generators upgrades.
+            <br>
+            <br>
+            At 21 total iris challenges completitions:
+            <br>
+            You keep your infinities on iris reset.
+            <br>
+            <br>
+            At 24 total iris challenges completitions:
+            <br>
+            Automatically gain 100% of pending infinity points per second.
+        </p>
+        <table>
+            <tr>
+                <td>
+                    <div class="irisChallenge" style="background-color: #c33;">
+                        <p>IrC1</p>
+                        <p>Money gain is raised on a decreasing but strictly greater than 0 power based on money.</p>
+                        <p>Goal: <span id="IrCgoal1">???</span></p>
+                        <p>Completitions: <span id="IrCcomp1">0</span></p>
+                        <button onclick="iris.challenges.start(1)">Start</button>
+                        <p>
+                            Primary reward: Money gain is raised ^<span id="IrCreward1">1</span>.
+                            <br>
+                            <br>
+                            Secondary reward: The 5th upgrade is much stronger.
+                        </p>
+                    </div>
+                </td>
+                <td>
+                    <div class="irisChallenge" style="background-color: #3c3;">
+                        <p>IrC2</p>
+                        <p>You can infinity at most <span>???</span> times and milestone 8 is disabled.</p>
+                        <p>Goal: <span id="IrCgoal2">???</span></p>
+                        <p>Completitions: <span id="IrCcomp2">0</span></p>
+                        <button onclick="iris.challenges.start(2)">Start</button>
+                        <p>
+                            Primary reward: Infinity generators are raised ^<span id="IrCreward2">1</span>.
+                            <br>
+                            <br>
+                            Secondary reward: IP gain is boosted by infinities.
+                        </p>
+                    </div>
+                </td>
+                <td>
+                    <div class="irisChallenge" style="background-color: #33c;">
+                        <p>IrC3</p>
+                        <p>Receptors and IrUs based boosts are weaker.</p>
+                        <p>Goal: <span id="IrCgoal3">???</span></p>
+                        <p>Completitions: <span id="IrCcomp3">0</span></p>
+                        <button onclick="iris.challenges.start(3)">Start</button>
+                        <p>
+                            Primary reward: Receptors and IrUs count as <span id="IrCreward3">1</span>x more.
+                            <br>
+                            <br>
+                            Secondary reward: Receptors gain is slighty increased.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="irisChallenge" style="background-image: radial-gradient(#c33, #3c3);">
+                        <p>IrC4</p>
+                        <p>IP multi is stronger but it also reduces money gain.</p>
+                        <p>Goal: <span id="IrCgoal4">???</span></p>
+                        <p>Completitions: <span id="IrCcomp4">0</span></p>
+                        <button onclick="iris.challenges.start(4)">Start</button>
+                        <p>
+                            Primary reward: Upgrade 8 cost is raised ^<span id="IrCreward41">1</span> and IPow multiplies IP gain by <span id="IrCreward42">1</span>x.
+                            <br>
+                            <br>
+                            Secondary reward: The IP multi boosts money gain and infinity generators at an altered rate.
+                        </p>
+                    </div>
+                </td>
+                <td>
+                    <div class="irisChallenge" style="background-image: radial-gradient(#c33, #33c);">
+                        <p>IrC5</p>
+                        <p>Money gain is tetrated ^^0.75 and IrUs are disabled.</p>
+                        <p>Goal: <span id="IrCgoal5">???</span></p>
+                        <p>Completitions: <span id="IrCcomp5">0</span></p>
+                        <button onclick="iris.challenges.start(5)">Start</button>
+                        <p>
+                            Primary reward: The e7e5$ softcap is <span id="IrCreward51">1</span>x weaker and Receptors gain is multiplied by <span id="IrCreward52">1</span>x.
+                            <br>
+                            <br>
+                            Secondary reward: Primary challenges rewards are stronger based on challenges completitions.
+                        </p>
+                    </div>
+                </td>
+                <td>
+                    <div class="irisChallenge" style="background-image: radial-gradient(#3c3, #33c);">
+                        <p>IrC6</p>
+                        <p>IP multi is diabled but IP gain is increased by tier 3 and 4 IrUs.</p>
+                        <p>Goal: <span id="IrCgoal6">???</span></p>
+                        <p>Completitions: <span id="IrCcomp6">0</span></p>
+                        <button onclick="iris.challenges.start(6)">Start</button>
+                        <p>
+                            Primary reward: IP gain is raised ^<span id="IrCreward61">1</span> and tier 1 IrUs are tetrated ^^<span id="IrCreward62">1</span>.
+                            <br>
+                            <br>
+                            Secondary reward: IP multi is stronger.
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <div id="optionsTab">
+        <br>
+        <label for="themeSelect">Theme</label>
+        <select id="themeSelect">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option id="secret-theme" value="none" style="display: none;">???</option>
+        </select>
+        <p>
+            Hotkeys:
+            <br>
+            m: buy max (upgrades and infinity generators);
+            <br>
+            p: infinity reset;
+            <br>
+            i: iris reset.
+        </p>
+        <p>
+            This game uses <a href="https://github.com/Patashu/break_eternity.js" target="_blank">break_eternity.js</a> by Patashu to handle numbers greater than 1.8e308.
+        </p>
+        <p>
+            Inspirations:
+            <br>
+            <a href="https://ivark.github.io/AntimatterDimensions/" target="_blank">Antimatter Dimensions</a> by Hevipelle and more:
+            <br>
+            Infinity layer, Iris upgrades;
+            <br>
+            <br>
+            <a href="https://dan-simon.github.io/misc/fe000000/" target="_blank">FE000000</a> by Dan-Simon (itself inspired by AD):
+            <br>
+            Infinity generators, Iris challenges.
+        </p>
+        <a href="chagelog.html" target="_blank">Changelog</a>
+    </div>
+
+    <br>
+    <button onclick="save()">Save</button>
+    <button onclick="hardReset()">Hard reset</button>
+    <button onclick="exportGame()">Export</button>
+    <button onclick="importGame()">Import</button>
+
+    <div id="end-screen">
+        <h1>You've beaten the game!</h1>
+        <p>
+            You can still go further bt only the UI for V0.8 content is done, neither is gameplay implemented nor is any balancing done.
+            <br>
+            If you want, you can also start again.
+            <br>
+            Either way, you've unlocked a new theme and (only if you continue) buy max for IP multi.
+        </p>
+        <button class="end-button" onclick="hardReset(); document.getElementById('secret-theme').style.display = 'block';">Start over</button>
+        <button class="end-button" onclick="continueGame()">Continue</button>
+        <p>If for some reason you needed it, here's an endegame save</p>
+        <textarea>eyJtb25leSI6IjkuMzIzMTgyODU1NjUyNjdlNzkxMDMzIiwiZ2FpbiI6IjUuNDg0MDY0MDUxNzAzNDMyZTc5MTAzMSIsInVwZ3JhZGVzIjpbNzA4NSwyMjQ0LDIyMzIsMjA3MiwyMzE2LDE4NTcsOTMsMjFdLCJpbmZpbml0aWVzIjoiMTAzOTMiLCJpbmZpbml0eVBvaW50cyI6IjUuMjA0MDQyODI5NDk3MTIxZTE1ODUiLCJpbmZpbml0eVVwZ3JhZGVzIjpbdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZV0sImJyZWFrIjp0cnVlLCJicmVha1VwZ3JhZGVzIjpbdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSx0cnVlLHRydWUsdHJ1ZSw3OTJdLCJpbmZpbml0eVBvd2VyIjoiMCIsImluZmluaXR5R2VuZXJhdG9yc0JvdWdodCI6WzAsMCwwLDAsMCwwLDAsMF0sImluZmluaXR5R2VuZXJhdG9yc0Ftb3VudCI6WyIwIiwiMCIsIjAiLCIwIiwiMCIsIjAiLCIwIiwiMCJdLCJpbmZpbml0eUdlbmVyYXRvcnNVcGdyYWRlcyI6WzAsMCwwXSwicmVjZXB0b3JzIjoiNTgiLCJtYXhSZWNlcHRvcnMiOiIzNzAiLCJpcmlzVXBncmFkZXMiOlsyMiwyNCw0MywxMyw1NSw1MSwxMiwxNCwzNSw1NCw1MiwzMV0sImNoYWxsZW5nZXNDb21wbGV0aXRpb25zIjpbMCwwLDAsMCwwLDBdLCJjdXJyZW50Q2hhbGxlbmdlIjowLCJzZWxlY3RlZFRhYiI6ImJyZWFrSW5maW5pdHlUYWIiLCJzaG93TWlsZXN0b25lcyI6dHJ1ZX0=</textarea>
+    </div>
+</body>
+<script src="js/break_eternity.js"></script>
+<script src="js/main.js"></script>
+<script src="js/hotkeys.js"></script>
+<script src="js/options.js"></script>
+<script src="js/init.js"></script>
+</html>

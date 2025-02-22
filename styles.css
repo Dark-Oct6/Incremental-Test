@@ -1,0 +1,149 @@
+* {
+    /* il font effettivo non è fira code (non è nemmeno importato), però per qualche motivo serve per le proporzioni del testo */
+    font-family: 'Fira code', monospace;
+    text-align: center;
+}
+
+body {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+table {
+    margin: auto;
+}
+
+button {
+    background-color: #d3d3d3;
+}
+
+a {
+    color: #00ffff;
+}
+
+select {
+    color: #fff;
+    background-color: #000;
+    border-color: #fff;
+}
+
+textarea {
+    color: #fff;
+    background-color: #000;
+    border-style: solid;
+    border-color: #fff;
+    border-width: 3px;
+}
+
+.end-button {
+    color: #fff;
+    background-color: #000;
+    border-style: solid;
+    border-color: #fff;
+    border-width: 2px;
+}
+
+.tooltip, .tooltip2 {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 500px;
+    bottom: 100%;
+    margin-left: -250px;
+    background-color: black;
+    padding: 10px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: white;
+    opacity: 0;
+    transition: opacity 0.25s;
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip2 .tooltiptext2 {
+    visibility: hidden;
+    width: 175px;
+    top: 100%;
+    margin-left: -117px;
+    background-color: black;
+    padding: 10px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: white;
+    opacity: 0;
+    transition: opacity 0.25s;
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip2:hover .tooltiptext2 {
+    visibility: visible;
+    opacity: 1;
+}
+
+.upgrade {
+    width: 200px;
+    height: 70px;
+}
+
+.infinityGeneratorColumn {
+    width: 250px;
+    height: 50px;
+}
+
+.irisUpgrade {
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+}
+
+.irisChallenge {
+    border-style: solid;
+    padding: 10px;
+    width: 300px;
+    height: 350px;
+}
+
+#prestigeSpace, #IPs {
+    display: none;
+}
+
+#mainTabButton {
+    color: white;
+    background-color: red;
+}
+
+#infinityTabButton, #breakInfinityTabButton, #infinityGeneratorsTabButton {
+    color: white;
+    background-color: green;
+}
+
+#irisTabButton {
+    color: white;
+    background-image: linear-gradient(to right, #ff0000, #008000, #0000ff);
+}
+
+#irisChallengesTabButton {
+    color: white;
+    background-color: blue;
+}
+
+#end-screen {
+    display: none;
+    background-color: #000;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    position: fixed;
+    z-index: 10;
+}
